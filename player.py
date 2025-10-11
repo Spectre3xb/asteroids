@@ -8,6 +8,7 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.timer = 0
+        # velocity is already inherited from CircleShape, but make sure it's used
 
     # in the player class
     def triangle(self):
@@ -27,6 +28,8 @@ class Player(CircleShape):
         self.rotation += dt * PLAYER_TURN_SPEED
 
     def update(self, dt):
+        # Apply velocity to position (inertia - ship keeps moving)
+        self.position += self.velocity * dt
 
         if self.timer > 0:
             self.timer -= dt
@@ -47,16 +50,16 @@ class Player(CircleShape):
             if self.timer <= 0:
                 self.shoot()
                 self.timer = PLAYER_SHOOT_COOLDOWN
-            self.timer -= dt
-
 
     def move(self, dt):
+        # Apply acceleration in the direction the ship is facing
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        self.position += forward * PLAYER_SPEED * dt
+        self.velocity += forward * PLAYER_SPEED * dt
 
     def shoot(self):
         shot = Shot(self.position.x, self.position.y)
-        shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+        # Add the player's velocity to the shot for realistic physics
+        shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED + self.velocity
 
 
 
