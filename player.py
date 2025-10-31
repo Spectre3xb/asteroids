@@ -31,6 +31,17 @@ class Player(CircleShape):
         # Apply velocity to position (inertia - ship keeps moving)
         self.position += self.velocity * dt
 
+        # Screen wrapping
+        if self.position.x < 0:
+            self.position.x = SCREEN_WIDTH
+        elif self.position.x > SCREEN_WIDTH:
+            self.position.x = 0
+
+        if self.position.y < 0:
+            self.position.y = SCREEN_HEIGHT
+        elif self.position.y > SCREEN_HEIGHT:
+            self.position.y = 0
+
         if self.timer > 0:
             self.timer -= dt
             if self.timer < 0:
